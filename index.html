@@ -298,22 +298,7 @@
        const resultText = await response.text();
 console.log(resultText);
 
-let result;
-try {
-  result = JSON.parse(resultText);
-} catch (e) {
-  throw new Error("Réponse script non lisible : " + resultText);
-}
-
-if (result.status !== "success") {
-  throw new Error(result.message || "Erreur inconnue");
-}
-
-successBox.textContent =
-  "Merci, votre réponse a bien été enregistrée. Feuille utilisée : " +
-  result.sheet_used +
-  " ; balise reçue : " +
-  result.balise_received;
+successBox.textContent = "Merci, votre réponse a bien été enregistrée.";
 successBox.style.display = "block";
 
         const savedBalise = baliseInput.value;
