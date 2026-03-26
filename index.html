@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lapin Greisch</title>
+  <title>Formulaire Balise</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -27,9 +27,12 @@
       font-size: 28px;
     }
 
-    p.intro {
+    .subtitle {
+      margin-top: -8px;
       margin-bottom: 24px;
-      color: #444;
+      color: #555;
+      font-size: 18px;
+      font-weight: bold;
     }
 
     fieldset {
@@ -106,6 +109,12 @@
       border: 1px solid #f0b8b8;
     }
 
+    .small {
+      font-size: 14px;
+      color: #666;
+      margin-top: 12px;
+    }
+
     @media (max-width: 640px) {
       .row {
         grid-template-columns: 1fr;
@@ -115,10 +124,8 @@
 </head>
 <body>
   <div class="card">
-    <h1>Lapin Greisch</h1>
-    <p class="intro">
-      Merci de compléter ce formulaire.
-    </p>
+    <h1>Chasse aux œufs</h1>
+    <div id="subtitle" class="subtitle"></div>
 
     <form id="lapinForm">
       <fieldset>
@@ -151,8 +158,14 @@
         </div>
       </fieldset>
 
+      <input type="hidden" id="balise" name="balise" />
+
       <div class="actions">
         <button id="submitBtn" type="submit">Envoyer</button>
+      </div>
+
+      <div class="small">
+        Les réponses seront enregistrées dans la feuille correspondant à la balise.
       </div>
     </form>
 
@@ -168,10 +181,43 @@
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbzh-lFj5kO16IGcgv1upf1fhpyq2lcln04YVkDc5Qcs-AzH6uOHSF2Dya-Ob9btJpeh/exec";
 
+    const baliseNames = {
+      "1": "Greisch",
+      "2": "IOL",
+      "3": "Bachelet",
+      "4": "Unisensor",
+      "5": "Cilyx",
+      "6": "Lasea",
+      "7": "Technord",
+      "8": "EVS",
+      "9": "Uhoda",
+      "10": "CRM",
+      "11": "CEWAC"
+    };
+
+    function getBaliseName(balise) {
+      return baliseNames[balise] || ("Balise " + balise);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const balise = params.get("balise") || "";
+
+    const subtitle = document.getElementById("subtitle");
+    const baliseInput = document.getElementById("balise");
     const form = document.getElementById("lapinForm");
     const submitBtn = document.getElementById("submitBtn");
     const successBox = document.getElementById("successBox");
     const errorBox = document.getElementById("errorBox");
+
+    if (!balise) {
+      subtitle.textContent = "Balise non définie";
+      errorBox.textContent = "Le lien est incomplet : paramètre balise manquant.";
+      errorBox.style.display = "block";
+      submitBtn.disabled = true;
+    } else {
+      subtitle.textContent = getBaliseName(balise) + " (balise " + balise + ")";
+      baliseInput.value = balise;
+    }
 
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
@@ -182,6 +228,7 @@
       submitBtn.textContent = "Envoi en cours...";
 
       const data = {
+        balise: document.getElementById("balise").value,
         nom: document.getElementById("nom").value,
         entreprise: document.getElementById("entreprise").value,
         oeufs: document.getElementById("oeufs").value,
@@ -197,8 +244,10 @@
         const text = await response.text();
         console.log(text);
 
+        successBox.textContent = "Merci, votre réponse a bien été enregistrée pour " + getBaliseName(data.balise) + ".";
         successBox.style.display = "block";
         form.reset();
+        baliseInput.value = balise;
       } catch (error) {
         console.error(error);
         errorBox.style.display = "block";
