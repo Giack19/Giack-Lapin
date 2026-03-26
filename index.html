@@ -115,6 +115,10 @@
       margin-top: 12px;
     }
 
+    .hidden {
+      display: none;
+    }
+
     @media (max-width: 640px) {
       .row {
         grid-template-columns: 1fr;
@@ -143,18 +147,28 @@
         </div>
       </fieldset>
 
-      <fieldset>
+      <!-- Bloc balises 1-11 -->
+      <fieldset id="bloc111" class="hidden">
         <legend>Réponses</legend>
         <div class="row">
           <div>
             <label for="oeufs">Combien y a-t-il d’œufs ?</label>
-            <input id="oeufs" name="oeufs" type="number" min="0" required />
+            <input id="oeufs" name="oeufs" type="number" min="0" />
           </div>
 
           <div>
             <label for="poids">Quel est le poids total des œufs (en grammes) ?</label>
-            <input id="poids" name="poids" type="number" min="0" step="1" required />
+            <input id="poids" name="poids" type="number" min="0" step="1" />
           </div>
+        </div>
+      </fieldset>
+
+      <!-- Bloc balises 20-28 et 100 -->
+      <fieldset id="blocQuestion3" class="hidden">
+        <legend>Question complémentaire</legend>
+        <div>
+          <label id="labelQuestion3" for="reponse3"></label>
+          <input id="reponse3" name="reponse3" type="text" />
         </div>
       </fieldset>
 
@@ -165,17 +179,12 @@
       </div>
 
       <div class="small">
-        Les réponses seront enregistrées dans la feuille correspondant à la balise.
+        Les réponses seront enregistrées dans la feuille correspondant à la plage de balises.
       </div>
     </form>
 
-    <div id="successBox" class="message success">
-      Merci, votre réponse a bien été enregistrée.
-    </div>
-
-    <div id="errorBox" class="message error">
-      L’envoi a échoué. Réessayez ou ouvrez la page dans un navigateur classique.
-    </div>
+    <div id="successBox" class="message success"></div>
+    <div id="errorBox" class="message error"></div>
   </div>
 
   <script>
@@ -195,8 +204,29 @@
       "11": "CEWAC"
     };
 
+    const questionBalises2028 = {
+      "20": "Tunnel",
+      "21": "Sentier",
+      "22": "Grille",
+      "23": "Grille",
+      "24": "Butte",
+      "25": "Bunker",
+      "26": "Arbre",
+      "27": "Sentier",
+      "28": "Arbre"
+    };
+
     function getBaliseName(balise) {
       return baliseNames[balise] || ("Balise " + balise);
+    }
+
+    function isBalise111(b) {
+      const n = parseInt(b, 10);
+      return n >= 1 && n <= 11;
+    }
+
+    function isBalise2028(b) {
+      return Object.prototype.hasOwnProperty.call(questionBalises2028, b);
     }
 
     const params = new URLSearchParams(window.location.search);
@@ -209,6 +239,13 @@
     const successBox = document.getElementById("successBox");
     const errorBox = document.getElementById("errorBox");
 
+    const bloc111 = document.getElementById("bloc111");
+    const blocQuestion3 = document.getElementById("blocQuestion3");
+    const labelQuestion3 = document.getElementById("labelQuestion3");
+    const oeufsInput = document.getElementById("oeufs");
+    const poidsInput = document.getElementById("poids");
+    const reponse3Input = document.getElementById("reponse3");
+
     if (!balise) {
       subtitle.textContent = "Balise non définie";
       errorBox.textContent = "Le lien est incomplet : paramètre balise manquant.";
@@ -217,6 +254,24 @@
     } else {
       subtitle.textContent = getBaliseName(balise) + " (balise " + balise + ")";
       baliseInput.value = balise;
+
+      if (isBalise111(balise)) {
+        bloc111.classList.remove("hidden");
+        oeufsInput.required = true;
+        poidsInput.required = true;
+      } else if (isBalise2028(balise)) {
+        blocQuestion3.classList.remove("hidden");
+        labelQuestion3.textContent = questionBalises2028[balise];
+        reponse3Input.required = true;
+      } else if (balise === "100") {
+        blocQuestion3.classList.remove("hidden");
+        labelQuestion3.textContent = "Quel nom original devrait avoir ce lapin ?";
+        reponse3Input.required = true;
+      } else {
+        errorBox.textContent = "Cette balise n'est pas prévue dans le formulaire.";
+        errorBox.style.display = "block";
+        submitBtn.disabled = true;
+      }
     }
 
     form.addEventListener("submit", async function (e) {
@@ -232,7 +287,8 @@
         nom: document.getElementById("nom").value,
         entreprise: document.getElementById("entreprise").value,
         oeufs: document.getElementById("oeufs").value,
-        poids: document.getElementById("poids").value
+        poids: document.getElementById("poids").value,
+        reponse3: document.getElementById("reponse3").value
       };
 
       try {
@@ -241,15 +297,26 @@
           body: JSON.stringify(data)
         });
 
-        const text = await response.text();
-        console.log(text);
+        const resultText = await response.text();
+        console.log(resultText);
 
-        successBox.textContent = "Merci, votre réponse a bien été enregistrée pour " + getBaliseName(data.balise) + ".";
+        successBox.textContent = "Merci, votre réponse a bien été enregistrée.";
         successBox.style.display = "block";
+
+        const savedBalise = baliseInput.value;
         form.reset();
-        baliseInput.value = balise;
+        baliseInput.value = savedBalise;
+
+        if (isBalise111(savedBalise)) {
+          oeufsInput.required = true;
+          poidsInput.required = true;
+        } else if (isBalise2028(savedBalise) || savedBalise === "100") {
+          reponse3Input.required = true;
+        }
+
       } catch (error) {
         console.error(error);
+        errorBox.textContent = "L’envoi a échoué. Réessayez ou ouvrez la page dans un navigateur classique.";
         errorBox.style.display = "block";
       } finally {
         submitBtn.disabled = false;
