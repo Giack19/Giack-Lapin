@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Formulaire Balise</title>
+  <title>Chasse aux œufs</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 760px;
+      max-width: 820px;
       margin: 0 auto;
       padding: 24px;
-      line-height: 1.5;
       background: #f7f7f7;
       color: #222;
     }
@@ -24,303 +24,326 @@
 
     h1 {
       margin-top: 0;
-      font-size: 28px;
     }
 
     .subtitle {
-      margin-top: -8px;
-      margin-bottom: 24px;
-      color: #555;
-      font-size: 18px;
+      margin-bottom: 20px;
       font-weight: bold;
+      color: #555;
     }
 
     fieldset {
-      border: 1px solid #d9d9d9;
+      border: 1px solid #ddd;
       border-radius: 8px;
       padding: 16px;
-      margin-bottom: 18px;
-      background: #fafafa;
+      margin-bottom: 16px;
     }
 
     legend {
       font-weight: bold;
-      padding: 0 8px;
     }
 
     label {
       display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
+      margin-bottom: 6px;
+      font-weight: bold;
     }
 
-    input {
+    input[type="text"],
+    input[type="number"] {
       width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
       box-sizing: border-box;
-      padding: 12px;
-      border: 1px solid #bbb;
+    }
+
+    .choice-group {
+      margin-top: 10px;
+    }
+
+    .choice-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
       border-radius: 8px;
-      font-size: 16px;
-      background: #fff;
+      background: #fafafa;
     }
 
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+    .choice-option input[type="radio"] {
+      width: auto;
+      margin: 0;
     }
 
-    .actions {
-      margin-top: 20px;
+    .choice-option label {
+      margin: 0;
+      font-weight: normal;
+      cursor: pointer;
+      width: 100%;
     }
 
     button {
-      border: 0;
+      width: 100%;
+      padding: 14px;
+      border: none;
       border-radius: 8px;
-      padding: 14px 20px;
-      font-size: 16px;
-      cursor: pointer;
       background: #0b63ce;
       color: white;
-      width: 100%;
-    }
-
-    button:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-
-    .message {
-      margin-top: 18px;
-      padding: 14px;
-      border-radius: 8px;
-      display: none;
-    }
-
-    .success {
-      background: #e8f7ec;
-      color: #1f6a35;
-      border: 1px solid #b7e0c2;
-    }
-
-    .error {
-      background: #fdecec;
-      color: #a12626;
-      border: 1px solid #f0b8b8;
-    }
-
-    .small {
-      font-size: 14px;
-      color: #666;
-      margin-top: 12px;
+      font-size: 16px;
+      cursor: pointer;
     }
 
     .hidden {
       display: none;
     }
 
-    @media (max-width: 640px) {
-      .row {
-        grid-template-columns: 1fr;
-      }
+    .message {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .success {
+      background: #e6f4ea;
+      color: #1e7e34;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .question-text {
+      font-weight: bold;
+      margin-bottom: 12px;
+      line-height: 1.5;
     }
   </style>
 </head>
+
 <body>
   <div class="card">
     <h1>Chasse aux œufs</h1>
     <div id="subtitle" class="subtitle"></div>
 
-    <form id="lapinForm">
+    <form id="form">
       <fieldset>
         <legend>Participant</legend>
-        <div class="row">
-          <div>
-            <label for="nom">Nom / Prénom</label>
-            <input id="nom" name="nom" type="text" required />
-          </div>
 
-          <div>
-            <label for="entreprise">Entreprise</label>
-            <input id="entreprise" name="entreprise" type="text" required />
-          </div>
-        </div>
+        <label for="nom">Nom / Prénom</label>
+        <input id="nom" type="text" required>
+
+        <label for="entreprise">Entreprise</label>
+        <input id="entreprise" type="text" required>
       </fieldset>
 
       <fieldset id="bloc111" class="hidden">
-        <legend>Réponses</legend>
-        <div class="row">
-          <div>
-            <label for="oeufs">Combien y a-t-il d’œufs ?</label>
-            <input id="oeufs" name="oeufs" type="number" min="0" />
-          </div>
+        <legend>Questions</legend>
 
-          <div>
-            <label for="poids">Quel est le poids total des œufs (en grammes) ?</label>
-            <input id="poids" name="poids" type="number" min="0" step="1" />
-          </div>
-        </div>
+        <label for="oeufs">Combien y a-t-il d’œufs ?</label>
+        <input id="oeufs" type="number">
+
+        <label for="poids">Quel est le poids total (g) ?</label>
+        <input id="poids" type="number">
       </fieldset>
 
-      <fieldset id="blocQuestion3" class="hidden">
-        <legend>Question complémentaire</legend>
-        <div>
-          <label id="labelQuestion3" for="reponse3"></label>
-          <input id="reponse3" name="reponse3" type="text" />
-        </div>
+      <fieldset id="blocQCM" class="hidden">
+        <legend>Question</legend>
+        <div id="questionQCM" class="question-text"></div>
+        <div id="choicesContainer" class="choice-group"></div>
       </fieldset>
 
-      <input type="hidden" id="balise" name="balise" />
+      <fieldset id="blocLibre100" class="hidden">
+        <legend>Question</legend>
 
-      <div class="actions">
-        <button id="submitBtn" type="submit">Envoyer</button>
-      </div>
+        <label for="reponse100">Quel nom original devrait avoir ce lapin ?</label>
+        <input id="reponse100" type="text">
+      </fieldset>
 
-      <div class="small">
-        Les réponses seront enregistrées dans la feuille correspondant à la balise.
-      </div>
+      <input type="hidden" id="balise">
+
+      <button type="submit">Envoyer</button>
     </form>
 
-    <div id="successBox" class="message success"></div>
-    <div id="errorBox" class="message error"></div>
+    <div id="success" class="message success">
+      Merci, votre réponse a bien été enregistrée.
+    </div>
+
+    <div id="error" class="message error">
+      Erreur lors de l’envoi.
+    </div>
   </div>
 
-  <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbzh-lFj5kO16IGcgv1upf1fhpyq2lcln04YVkDc5Qcs-AzH6uOHSF2Dya-Ob9btJpeh/exec";
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbzh-lFj5kO16IGcgv1upf1fhpyq2lcln04YVkDc5Qcs-AzH6uOHSF2Dya-Ob9btJpeh/exec";
 
-    const baliseNames = {
-      "1": "Greisch",
-      "2": "IOL",
-      "3": "Bachelet",
-      "4": "Unisensor",
-      "5": "Cilyx",
-      "6": "Lasea",
-      "7": "Technord",
-      "8": "EVS",
-      "9": "Uhoda",
-      "10": "CRM",
-      "11": "CEWAC"
-    };
+const baliseNames = {
+  "1": "Greisch",
+  "2": "IOL",
+  "3": "Bachelet",
+  "4": "Unisensor",
+  "5": "Cilyx",
+  "6": "Lasea",
+  "7": "Technord",
+  "8": "EVS",
+  "9": "Uhoda",
+  "10": "CRM",
+  "11": "CEWAC"
+};
 
-    const questionBalises2028 = {
-      "20": "Tunnel",
-      "21": "Sentier",
-      "22": "Grille",
-      "23": "Grille",
-      "24": "Butte",
-      "25": "Bunker",
-      "26": "Arbre",
-      "27": "Sentier",
-      "28": "Arbre"
-    };
+const qcmQuestions = {
+  "20": {
+    question: "On peut potentiellement replier plus de fois une crêpe à Bamako qu'à Oslo.",
+    choices: ["Vrai", "Faux"]
+  },
+  "21": {
+    question: "Il existe une ville qui s'appelle Rome sur chaque continent.",
+    choices: ["Vrai", "Faux"]
+  },
+  "22": {
+    question: "En France, il n'y a eu aucune naissance entre le 10/12/1582 et le 19/12/1582.",
+    choices: ["Vrai", "Faux"]
+  },
+  "23": {
+    question: "Quel est le premier homme à avoir réalisé un tour du monde ?",
+    choices: ["Magellan", "Juan Sebastian Elcano"]
+  },
+  "24": {
+    question: "Le Shah Jahan a fait couper les mains des 20000 ouvriers qui ont aidé à bâtir le Taj Mahal afin qu'un tel bâtiment ne puisse plus être construit.",
+    choices: ["Vrai", "Faux"]
+  },
+  "25": {
+    question: "L'expression \"C'est du chinois\" se traduit en anglais par \"C'est du japonais\".",
+    choices: ["Vrai", "Faux"]
+  },
+  "26": {
+    question: "Le jour qui vient trois jours après le jour, qui vient deux jours après le jour, qui vient immédiatement après le jour, qui vient deux jours après lundi, c'est lundi.",
+    choices: ["Vrai", "Faux"]
+  },
+  "27": {
+    question: "On écrit les culottes bleues d'Astérix et les culottes bleu et blanc d'Obélix.",
+    choices: ["Vrai", "Faux"]
+  },
+  "28": {
+    question: "Blanche-Neige a 14 ans.",
+    choices: ["Vrai", "Faux"]
+  }
+};
 
-    function getBaliseName(balise) {
-      return baliseNames[balise] || ("Balise " + balise);
-    }
+function getBaliseName(balise) {
+  return baliseNames[balise] || ("Balise " + balise);
+}
 
-    function isBalise111(b) {
-      const n = parseInt(b, 10);
-      return n >= 1 && n <= 11;
-    }
+function isBalise111(b) {
+  const n = parseInt(b, 10);
+  return n >= 1 && n <= 11;
+}
 
-    function isBalise2028(b) {
-      return Object.prototype.hasOwnProperty.call(questionBalises2028, b);
-    }
+function isBalise2028(b) {
+  return Object.prototype.hasOwnProperty.call(qcmQuestions, b);
+}
 
-    const params = new URLSearchParams(window.location.search);
-    const balise = params.get("balise") || "";
+function getSelectedRadioValue(name) {
+  const checked = document.querySelector('input[name="' + name + '"]:checked');
+  return checked ? checked.value : "";
+}
 
-    const subtitle = document.getElementById("subtitle");
-    const baliseInput = document.getElementById("balise");
-    const form = document.getElementById("lapinForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const successBox = document.getElementById("successBox");
-    const errorBox = document.getElementById("errorBox");
+const params = new URLSearchParams(window.location.search);
+const balise = params.get("balise") || "";
 
-    const bloc111 = document.getElementById("bloc111");
-    const blocQuestion3 = document.getElementById("blocQuestion3");
-    const labelQuestion3 = document.getElementById("labelQuestion3");
-    const oeufsInput = document.getElementById("oeufs");
-    const poidsInput = document.getElementById("poids");
-    const reponse3Input = document.getElementById("reponse3");
+document.getElementById("balise").value = balise;
+document.getElementById("subtitle").textContent = getBaliseName(balise) + " (balise " + balise + ")";
 
-    if (!balise) {
-      subtitle.textContent = "Balise non définie";
-      errorBox.textContent = "Le lien est incomplet : paramètre balise manquant.";
-      errorBox.style.display = "block";
-      submitBtn.disabled = true;
-    } else {
-      subtitle.textContent = getBaliseName(balise) + " (balise " + balise + ")";
-      baliseInput.value = balise;
+const bloc111 = document.getElementById("bloc111");
+const blocQCM = document.getElementById("blocQCM");
+const blocLibre100 = document.getElementById("blocLibre100");
+const questionQCM = document.getElementById("questionQCM");
+const choicesContainer = document.getElementById("choicesContainer");
+const oeufsInput = document.getElementById("oeufs");
+const poidsInput = document.getElementById("poids");
+const reponse100Input = document.getElementById("reponse100");
 
-      if (isBalise111(balise)) {
-        bloc111.classList.remove("hidden");
-        oeufsInput.required = true;
-        poidsInput.required = true;
-      } else if (isBalise2028(balise)) {
-        blocQuestion3.classList.remove("hidden");
-        labelQuestion3.textContent = questionBalises2028[balise];
-        reponse3Input.required = true;
-      } else if (balise === "100") {
-        blocQuestion3.classList.remove("hidden");
-        labelQuestion3.textContent = "Quel nom original devrait avoir ce lapin ?";
-        reponse3Input.required = true;
-      } else {
-        errorBox.textContent = "Cette balise n'est pas prévue dans le formulaire.";
-        errorBox.style.display = "block";
-        submitBtn.disabled = true;
-      }
-    }
+if (isBalise111(balise)) {
+  bloc111.classList.remove("hidden");
+  oeufsInput.required = true;
+  poidsInput.required = true;
+} else if (isBalise2028(balise)) {
+  blocQCM.classList.remove("hidden");
 
-    form.addEventListener("submit", async function (e) {
-      e.preventDefault();
+  const q = qcmQuestions[balise];
+  questionQCM.textContent = q.question;
 
-      successBox.style.display = "none";
-      errorBox.style.display = "none";
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Envoi en cours...";
+  q.choices.forEach((choice, index) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "choice-option";
 
-      const data = {
-        balise: document.getElementById("balise").value,
-        nom: document.getElementById("nom").value,
-        entreprise: document.getElementById("entreprise").value,
-        oeufs: document.getElementById("oeufs").value,
-        poids: document.getElementById("poids").value,
-        reponse3: document.getElementById("reponse3").value
-      };
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "reponse3";
+    radio.value = choice;
+    radio.id = "reponse3_" + index;
+    radio.required = true;
 
-      try {
-        const response = await fetch(scriptURL, {
-          method: "POST",
-          body: JSON.stringify(data)
-        });
+    const label = document.createElement("label");
+    label.htmlFor = radio.id;
+    label.textContent = choice;
 
-       const resultText = await response.text();
-console.log(resultText);
+    wrapper.appendChild(radio);
+    wrapper.appendChild(label);
+    choicesContainer.appendChild(wrapper);
+  });
+} else if (balise === "100") {
+  blocLibre100.classList.remove("hidden");
+  reponse100Input.required = true;
+} else {
+  document.getElementById("error").textContent = "Balise non reconnue.";
+  document.getElementById("error").style.display = "block";
+}
 
-successBox.textContent = "Merci, votre réponse a bien été enregistrée.";
-successBox.style.display = "block";
+document.getElementById("form").addEventListener("submit", async function(e) {
+  e.preventDefault();
 
-        const savedBalise = baliseInput.value;
-        form.reset();
-        baliseInput.value = savedBalise;
+  document.getElementById("success").style.display = "none";
+  document.getElementById("error").style.display = "none";
 
-        if (isBalise111(savedBalise)) {
-          oeufsInput.required = true;
-          poidsInput.required = true;
-        } else if (isBalise2028(savedBalise) || savedBalise === "100") {
-          reponse3Input.required = true;
-        }
+  const data = {
+    balise: document.getElementById("balise").value,
+    nom: document.getElementById("nom").value,
+    entreprise: document.getElementById("entreprise").value,
+    oeufs: document.getElementById("oeufs").value,
+    poids: document.getElementById("poids").value,
+    reponse3: isBalise2028(balise)
+      ? getSelectedRadioValue("reponse3")
+      : reponse100Input.value
+  };
 
-      } catch (error) {
-        console.error(error);
-        errorBox.textContent = "L’envoi a échoué. Réessayez ou ouvrez la page dans un navigateur classique.";
-        errorBox.style.display = "block";
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Envoyer";
-      }
+  try {
+    const response = await fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify(data)
     });
-  </script>
+
+    const resultText = await response.text();
+    const result = JSON.parse(resultText);
+
+    if (result.status !== "success") {
+      throw new Error(result.message || "Erreur inconnue");
+    }
+
+    document.getElementById("success").style.display = "block";
+    document.getElementById("form").reset();
+    document.getElementById("balise").value = balise;
+
+  } catch (err) {
+    document.getElementById("error").textContent = "Erreur lors de l’envoi.";
+    document.getElementById("error").style.display = "block";
+  }
+});
+</script>
 </body>
 </html>
