@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chasse aux œufs</title>
-
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,41 +13,30 @@
       background: #f7f7f7;
       color: #222;
     }
-
     .card {
       background: #fff;
       border-radius: 12px;
       padding: 24px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     }
-
-    h1 {
-      margin-top: 0;
-    }
-
+    h1 { margin-top: 0; }
     .subtitle {
       margin-bottom: 20px;
       font-weight: bold;
       color: #555;
     }
-
     fieldset {
       border: 1px solid #ddd;
       border-radius: 8px;
       padding: 16px;
       margin-bottom: 16px;
     }
-
-    legend {
-      font-weight: bold;
-    }
-
+    legend { font-weight: bold; }
     label {
       display: block;
       margin-bottom: 6px;
       font-weight: bold;
     }
-
     input[type="text"],
     input[type="number"] {
       width: 100%;
@@ -58,11 +46,7 @@
       margin-bottom: 10px;
       box-sizing: border-box;
     }
-
-    .choice-group {
-      margin-top: 10px;
-    }
-
+    .choice-group { margin-top: 10px; }
     .choice-option {
       display: flex;
       align-items: center;
@@ -73,19 +57,16 @@
       border-radius: 8px;
       background: #fafafa;
     }
-
     .choice-option input[type="radio"] {
       width: auto;
       margin: 0;
     }
-
     .choice-option label {
       margin: 0;
       font-weight: normal;
       cursor: pointer;
       width: 100%;
     }
-
     button {
       width: 100%;
       padding: 14px;
@@ -96,28 +77,21 @@
       font-size: 16px;
       cursor: pointer;
     }
-
-    .hidden {
-      display: none;
-    }
-
+    .hidden { display: none; }
     .message {
       margin-top: 15px;
       padding: 10px;
       border-radius: 6px;
       display: none;
     }
-
     .success {
       background: #e6f4ea;
       color: #1e7e34;
     }
-
     .error {
       background: #f8d7da;
       color: #842029;
     }
-
     .question-text {
       font-weight: bold;
       margin-bottom: 12px;
@@ -125,7 +99,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="card">
     <h1>Chasse aux œufs</h1>
@@ -142,7 +115,7 @@
         <input id="entreprise" type="text" required>
       </fieldset>
 
-      <fieldset id="bloc111" class="hidden">
+      <fieldset id="bloc112" class="hidden">
         <legend>Questions</legend>
 
         <label for="oeufs">Combien y a-t-il d’œufs ?</label>
@@ -193,7 +166,8 @@ const baliseNames = {
   "8": "EVS",
   "9": "Uhoda",
   "10": "CRM",
-  "11": "CEWAC"
+  "11": "CEWAC",
+  "12": "Consolar"
 };
 
 const qcmQuestions = {
@@ -239,9 +213,9 @@ function getBaliseName(balise) {
   return baliseNames[balise] || ("Balise " + balise);
 }
 
-function isBalise111(b) {
+function isBalise112(b) {
   const n = parseInt(b, 10);
-  return n >= 1 && n <= 11;
+  return n >= 1 && n <= 12;
 }
 
 function isBalise2028(b) {
@@ -259,7 +233,7 @@ const balise = params.get("balise") || "";
 document.getElementById("balise").value = balise;
 document.getElementById("subtitle").textContent = getBaliseName(balise) + " (balise " + balise + ")";
 
-const bloc111 = document.getElementById("bloc111");
+const bloc112 = document.getElementById("bloc112");
 const blocQCM = document.getElementById("blocQCM");
 const blocLibre100 = document.getElementById("blocLibre100");
 const questionQCM = document.getElementById("questionQCM");
@@ -268,8 +242,8 @@ const oeufsInput = document.getElementById("oeufs");
 const poidsInput = document.getElementById("poids");
 const reponse100Input = document.getElementById("reponse100");
 
-if (isBalise111(balise)) {
-  bloc111.classList.remove("hidden");
+if (isBalise112(balise)) {
+  bloc112.classList.remove("hidden");
   oeufsInput.required = true;
   poidsInput.required = true;
 } else if (isBalise2028(balise)) {
